@@ -151,15 +151,15 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <excludes>
-                    <exclude>application*.yaml</exclude>
+                    <exclude>application*.yml</exclude>
                 </excludes>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>application.yaml</include>
-                    <include>application-${environment}.yaml</include>
+                    <include>application.yml</include>
+                    <include>application-${environment}.yml</include>
                 </includes>
             </resource>
         </resources>
