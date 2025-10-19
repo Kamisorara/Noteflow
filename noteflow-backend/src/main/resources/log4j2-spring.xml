@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <!-- 定义日志格式 -->
+    <Appenders>
+        <!-- 控制台输出 带颜色-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level: %msg%n"
+                           disableAnsi="false">
+                <Pattern>
+                    %highlight{%d{HH:mm:ss} [%t] %-5level: %msg%n}{FATAL=bright red, ERROR=red, WARN=yellow, INFO=green,
+                    DEBUG=cyan, TRACE=blue}
+                </Pattern>
+            </PatternLayout>
+        </Console>
+
+        <!-- 通用日志文件 - 按日期分割 -->
+        <RollingFile name="RollingFile" fileName="./logs/${date:yyyy-MM-dd}.log"
+                     filePattern="./logs/%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1} - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+
+        <!-- 仅INFO级别日志文件 -->
+        <RollingFile name="InfoFile" fileName="./logs/info-${date:yyyy-MM-dd}.log"
+                     filePattern="./logs/info-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1} - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+            <Filters>
+                <!-- 先拒绝WARN及以上级别 -->
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <!-- 再接受INFO级别 -->
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingFile>
+
+        <!-- 仅ERROR级别日志文件 -->
+        <RollingFile name="ErrorFile" fileName="./logs/error-${date:yyyy-MM-dd}.log"
+                     filePattern="./logs/error-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1} - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+        </RollingFile>
+    </Appenders>
+
+    <!-- 配置日志级别和输出 -->
+    <Loggers>
+        <!-- 应用日志记录器 -->
+        <Logger name="com.noteflow" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="InfoFile"/>
+            <AppenderRef ref="ErrorFile"/>
+        </Logger>
+
+        <!-- Spring Boot 默认日志级别 -->
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="InfoFile"/>
+            <AppenderRef ref="ErrorFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,37 @@
+server:
+  port: 8081
+
+spring:
+  #   banner配置
+  banner:
+    charset: UTF-8
+    location: classpath:banner.txt
+  main:
+    banner-mode: console
+
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/noteflow?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: your_username_here
+    password: your_password_here
+
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: your_password_here
+      database: 0
+      connect-timeout: 60000
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 8
+          min-idle: 0
+          max-wait: 5s
+
+# ORM配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/**/*.xml
