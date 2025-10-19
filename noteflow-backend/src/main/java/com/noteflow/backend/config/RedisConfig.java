@@ -11,18 +11,24 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 @Configuration
 public class RedisConfig {
+
     @Bean
-    @SuppressWarnings(value = {"unchecked", "rawtypes"})
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public FastJson2RedisSerializer<Object> fastJson2RedisSerializer() {
+        // serializer.addAccept("com.noteflow.backend.**"); // 加白名单
+        return new FastJson2RedisSerializer<>(Object.class);
+    }
+
+    @Bean
+    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory,
+                                                       FastJson2RedisSerializer<Object> fastJson2RedisSerializer) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-        FastJson2RedisSerializer serializer = new FastJson2RedisSerializer(Object.class);
 
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(serializer);
+        template.setValueSerializer(fastJson2RedisSerializer);
 
         template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(serializer);
+        template.setHashValueSerializer(fastJson2RedisSerializer);
 
         template.afterPropertiesSet();
         return template;
