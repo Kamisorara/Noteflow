@@ -1,6 +1,9 @@
 server:
   port: 8081
 
+cors:
+  allowedOrigins: "*"
+
 spring:
   #   banner配置
   banner:
